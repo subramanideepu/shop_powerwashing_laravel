@@ -1,0 +1,2 @@
+$(".btn-actions").on("click",(function(n){n.preventDefault();var o=$("#import_type").val();window.location.href=route("admin.download_csv.index",{import_type:o})}));
+//# sourceMappingURL=importer.js.map

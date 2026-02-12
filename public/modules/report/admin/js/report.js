@@ -1,0 +1,2 @@
+$("form").on("submit",(function(t){$(t.currentTarget).find(":input").filter((function(t,n){return!n.value})).attr("disabled","disabled")})),$("#report-type").on("change",(function(t){window.location=route("admin.reports.index",{type:t.currentTarget.value})}));
+//# sourceMappingURL=report.js.map

@@ -1,0 +1,2 @@
+$("[data-loading]").on("click",(function(a){var t=$(a.currentTarget);t.is("i")&&(t=t.parent()),t.data("loading-text",t.html()).addClass("btn-loading").button("loading")}));
+//# sourceMappingURL=login.js.map

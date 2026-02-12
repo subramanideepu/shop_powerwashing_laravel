@@ -1,0 +1,2 @@
+$("#refresh-rates").on("click",(function(r){$.ajax({type:"GET",url:route("admin.currency_rates.refresh"),success:function(){DataTable.reload("#currency-rates-table .table"),window.admin.stopButtonLoading($(r.currentTarget))},error:function(r){function n(n){return r.apply(this,arguments)}return n.toString=function(){return r.toString()},n}((function(n){error(n.responseJSON.message),window.admin.stopButtonLoading($(r.currentTarget))}))})}));
+//# sourceMappingURL=currency.js.map

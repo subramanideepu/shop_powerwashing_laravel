@@ -1,0 +1,2 @@
+$("#order-status").change((function(t){$.ajax({type:"PUT",url:route("admin.orders.status.update",t.currentTarget.dataset.id),data:{status:t.currentTarget.value},success:function(t){function r(r){return t.apply(this,arguments)}return r.toString=function(){return t.toString()},r}((function(t){success(t)})),error:function(t){function r(r){return t.apply(this,arguments)}return r.toString=function(){return t.toString()},r}((function(t){error(t.responseJSON.message)}))})}));
+//# sourceMappingURL=order.js.map
