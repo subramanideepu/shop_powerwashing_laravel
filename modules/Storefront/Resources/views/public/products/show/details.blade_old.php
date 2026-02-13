@@ -61,10 +61,7 @@
                 @click="syncCompareList"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M3.58008 5.15991H17.4201C19.0801 5.15991 20.4201 6.49991 20.4201 8.15991V11.4799" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M6.74008 2L3.58008 5.15997L6.74008 8.32001" stroke="#292D32" stroke-width="1.5"/>
-                    <path d="M20.4201 18.84H6.58008C4.92008 18.84 3.58008 17.5 3.58008 15.84V12.52" stroke="#292D32" stroke-width="1.5"/>
-                    <path d="M17.26 21.9999L20.42 18.84L17.26 15.6799" stroke="#292D32" stroke-width="1.5"/>
+                    <path d="M3.58008 5.15991H17.4201C19.0801 5.15991 20.4201 6.49991 20.4201 8.15991V11.4799" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6.74008 2L3.58008 5.15997L6.74008 8.32001" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M20.4201 18.84H6.58008C4.92008 18.84 3.58008 17.5 3.58008 15.84V12.52" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M17.26 21.9999L20.42 18.84L17.26 15.6799" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>
                 
                 {{ trans('storefront::product.compare') }}
@@ -73,45 +70,50 @@
     </div>
 
     <div class="details-info-middle">
-
-        {{-- ✅ PRICE --}}
         @if ($product->variant)
             <template x-if="isActiveItem">
+                    @if ($item->selling_price->amount() > 0)
 
-                @if ($item->selling_price->amount() > 0)
-                    <div class="product-price">
-                        <template x-if="hasSpecialPrice">
-                            <span class="special-price" x-text="formatCurrency(specialPrice)"></span>
-                        </template>
-                        
-                        <span class="special-price" x-text="formatCurrency(regularPrice)">
-                            {!! $item->is_active
-                                ? $item->hasSpecialPrice()
-                                    ? $item->special_price->format()
-                                    : $item->price->format()
-                                : '' !!}
-                        </span>
-                    </div>
-                @endif
+    <div class="product-price">
+        <template x-if="hasSpecialPrice">
+            <span class="special-price" x-text="formatCurrency(specialPrice)"></span>
+        </template>
 
-            </template>
-        @else
+        <span class="special-price" x-text="formatCurrency(regularPrice)">
+            {{ $item->hasSpecialPrice()
+                ? $item->special_price->format()
+                : $item->selling_price->format() }}
+        </span>
+    </div>
 
-            @if ($item->selling_price->amount() > 0)
-                <div class="product-price">
+@endif
                     <template x-if="hasSpecialPrice">
                         <span class="special-price" x-text="formatCurrency(specialPrice)"></span>
                     </template>
-
-                    <span class="special-price" x-text="formatCurrency(regularPrice)">
-                        {{ $item->hasSpecialPrice()
-                            ? $item->special_price->format()
-                            : $item->selling_price->format() }}
+                    
+                  <span class="special-price" x-text="formatCurrency(regularPrice)">
+                        {!! $item->is_active ? $item->hasSpecialPrice() ? $item->special_price->format() : $item->price->format() : '' !!}
                     </span>
+                   
                 </div>
-            @endif
+            </template>
+         
+   
 
+        @else
+            <div class="product-price">
+                <template x-if="hasSpecialPrice">
+                    <span class="special-price" x-text="formatCurrency(specialPrice)"></span>
+                </template>
+
+              <span class="special-price" x-text="formatCurrency(regularPrice)">
+                
+                    {{ $item->hasSpecialPrice() ? $item->special_price->format() : $item->selling_price->format() }}
+                </span>
+              
+            </div>
         @endif
+
 
         <form
             @input="errors.clear($event.target.name)"
@@ -131,63 +133,78 @@
                 </div>
             @endif
 
-            {{-- ✅ ACTIONS --}}
             <div class="details-info-middle-actions">
+                   @if ($item->selling_price->amount() > 0)
+                <div class="number-picker-lg">
+                    <label for="qty">{{ trans('storefront::product.quantity') }}</label>
 
-                @if ($item->selling_price->amount() > 0)
+                    <div class="input-group-quantity">
+                        <input
+                            x-ref="inputQuantity"
+                            type="text"
+                            :value="cartItemForm.qty"
+                            min="1"
+                            :max="maxQuantity"
+                            id="qty"
+                            class="form-control input-number input-quantity"
+                            :disabled="isAddToCartDisabled"
+                            @focus="$event.target.select()"
+                            @input="updateQuantity(Number($event.target.value))"
+                            @keydown.up="updateQuantity(cartItemForm.qty + 1)"
+                            @keydown.down="updateQuantity(cartItemForm.qty - 1)"
+                        >
 
-                    <div class="number-picker-lg">
-                        <label for="qty">{{ trans('storefront::product.quantity') }}</label>
-
-                        <div class="input-group-quantity">
-                            <input
-                                x-ref="inputQuantity"
-                                type="text"
-                                :value="cartItemForm.qty"
-                                min="1"
-                                :max="maxQuantity"
-                                id="qty"
-                                class="form-control input-number input-quantity"
-                                :disabled="isAddToCartDisabled"
-                                @focus="$event.target.select()"
-                                @input="updateQuantity(Number($event.target.value))"
+                        <span class="btn-wrapper">
+                            <button
+                                type="button"
+                                aria-label="quantity"
+                                class="btn btn-number btn-plus"
+                                :disabled="isQtyIncreaseDisabled"
+                                @click="updateQuantity(cartItemForm.qty + 1)"
                             >
+                                +
+                            </button>
 
-                            <span class="btn-wrapper">
-                                <button type="button" class="btn btn-number btn-plus">+</button>
-                                <button type="button" class="btn btn-number btn-minus">-</button>
-                            </span>
-                        </div>
+                            <button
+                                type="button"
+                                aria-label="quantity"
+                                class="btn btn-number btn-minus"
+                                :disabled="isQtyDecreaseDisabled"
+                                @click="updateQuantity(cartItemForm.qty - 1)"
+                            >
+                                -
+                            </button>
+                        </span>
                     </div>
+                </div>
 
-                    <button
-                        type="submit"
-                        class="btn btn-primary btn-add-to-cart"
-                        :class="{'btn-loading': addingToCart }"
-                        :disabled="isAddToCartDisabled"
-                    >
-                        {{ trans('storefront::product.add_to_cart') }}
-                    </button>
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-add-to-cart"
+                    :class="{'btn-loading': addingToCart }"
+                    :disabled="isAddToCartDisabled"
+                    x-text="isActiveItem ? '{{ trans('storefront::product.add_to_cart') }}' : '{{ trans('storefront::product.unavailable') }}'"
+                >
+                    {{ trans($item->is_active ? 'storefront::product.add_to_cart' : 'storefront::product.unavailable') }}
+                </button>
+                 @else
 
-                @else
+        <a href="https://shop.powerwashing.com/contact"
+           class="btn btn-primary btn-add-to-cart">
+            Request a Quote
+        </a>
 
-                    <a href="https://shop.powerwashing.com/contact"
-                       class="btn btn-primary btn-add-to-cart">
-                        Request a Quote
-                    </a>
-
-                @endif
-
+    @endif
             </div>
         </form>
     </div>
 
     <div class="details-info-bottom">
         <ul class="list-inline additional-info">
-
             <template x-cloak x-if="item.sku">
                 <li class="sku">
                     <label>{{ trans('storefront::product.sku') }}</label>
+                    
                     <span x-text="item.sku">{{ $item->sku }}</span>
                 </li>
             </template>
@@ -195,6 +212,7 @@
             @if ($product->categories->isNotEmpty())
                 <li>
                     <label>{{ trans('storefront::product.categories') }}</label>
+
                     @foreach ($product->categories as $category)
                         <a href="{{ $category->url() }}">{{ $category->name }}</a>{{ $loop->last ? '' : ',' }}
                     @endforeach
@@ -204,12 +222,12 @@
             @if ($product->tags->isNotEmpty())
                 <li>
                     <label>{{ trans('storefront::product.tags') }}</label>
+
                     @foreach ($product->tags as $tag)
                         <a href="{{ $tag->url() }}">{{ $tag->name }}</a>{{ $loop->last ? '' : ',' }}
                     @endforeach
                 </li>
             @endif
-
         </ul>
 
         @include('storefront::public.products.show.social_share')
