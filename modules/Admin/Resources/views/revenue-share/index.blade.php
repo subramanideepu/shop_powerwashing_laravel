@@ -54,7 +54,7 @@
         <div class="stat-card sales">
             <div class="stat-info">
                 <div class="stat-label">Sales Value</div>
-                <div class="stat-number">{{ number_format($revenue, 2) }}</div>
+                <div class="stat-number">${{ number_format($revenue, 2) }}</div>
             </div>
             <div class="stat-icon">
                 <i class="fas fa-dollar-sign"></i>
@@ -67,7 +67,7 @@
         <div class="stat-card share1">
             <div class="stat-info">
                 <div class="stat-label">Share 1</div>
-                <div class="stat-number">{{ number_format($share1, 2) }}</div>
+                <div class="stat-number">${{ number_format($share1, 2) }}</div>
             </div>
             <div class="stat-icon">
                 <i class="fas fa-users"></i>
@@ -80,7 +80,7 @@
         <div class="stat-card share2">
             <div class="stat-info">
                 <div class="stat-label">Share 2</div>
-                <div class="stat-number">{{ number_format($share2, 2) }}</div>
+                <div class="stat-number">${{ number_format($share2, 2) }}</div>
             </div>
             <div class="stat-icon">
                 <i class="fas fa-user-friends"></i>
@@ -93,13 +93,17 @@
         <div class="stat-card {{ $profit < 0 ? 'profit-loss' : 'profit' }}">
 
             <div class="stat-info">
-                <div class="stat-label">Profit</div>
+                <div class="stat-label">Profit/Loss</div>
 
                 <div class="stat-number">
-                    {{ number_format($profit, 2) }}
+                    ${{ number_format($profit, 2) }}
 
                     {{-- 🔥 ARROW INDICATOR --}}
                     <span class="profit-indicator">
+
+
+
+
                         @if($profit > 0)
                             <i class="fas fa-arrow-up"></i>
                         @elseif($profit < 0)
@@ -158,10 +162,11 @@
             <th>Product</th>
             <th>Variant</th>
             <th>Qty</th>
-            <th>Revenue</th>
+            <th>Base_Price</th>
+            <th>Selling_Price</th>
             <th>Share 1</th>
             <th>Share 2</th>
-            <th>Profit</th>
+            <th>Profit/Loss</th>
         </tr>
         </thead>
         <tbody>
@@ -171,6 +176,7 @@
                 <td>{{ $row->slug }}</td>
                 <td>{{ $row->variant ?? '—' }}</td>
                 <td>{{ $row->qty }}</td>
+                <td>{{ number_format($row->cost_price ?? 0, 2) }}</td>
                 <td>{{ number_format($row->line_total, 2) }}</td>
                 <td>{{ number_format($row->share1, 2) }}</td>
                 <td>{{ number_format($row->share2, 2) }}</td>
