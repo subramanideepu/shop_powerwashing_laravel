@@ -29,9 +29,7 @@ class SidebarExtender extends BaseSidebarExtender
                 $item->icon('fa fa-chart-line');
                 $item->weight(20);
                 $item->route('admin.revenue_share.index');
-                $item->authorize(
-            $this->auth->hasAccess('admin.revenue_share.index')
-        );
+                
     });
 
             $group->item(trans('admin::sidebar.appearance'), function (Item $item) {
