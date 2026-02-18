@@ -113,6 +113,7 @@ class SaveProductRequest extends Request
             'variants.*.qty' => 'required_if:variants.*.is_active,1|required_if:variants.*.manage_stock,1|nullable|numeric',
             'variants.*.in_stock' => 'required_if:variants.*.is_active,1|boolean',
             'variants.*.is_active' => 'required|boolean',
+            'variants.*.margin_percentage' => 'nullable|numeric|min:0|max:100',
         ];
     }
 

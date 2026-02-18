@@ -229,6 +229,35 @@
                                                             </span>
                                                         </div>
                                                     </div>
+                                                    <div class="col-sm-6">
+    <div class="form-group row">
+        <label :for="`variants-${variant.uid}-margin`">
+            Margin (%)
+        </label>
+
+        <div class="input-group">
+            <span class="input-group-addon">%</span>
+
+            <input
+                type="number"
+                :name="`variants.${variant.uid}.margin_percentage`"
+                min="0"
+                step="0.1"
+                :id="`variants-${variant.uid}-margin`"
+                class="form-control"
+                @wheel="$event.target.blur()"
+                v-model.number="variant.margin_percentage"
+            >
+        </div>
+
+        <span
+            class="help-block text-red"
+            v-if="errors.has(`variants.${variant.uid}.margin_percentage`)"
+            v-text="errors.get(`variants.${variant.uid}.margin_percentage`)"
+        >
+        </span>
+    </div>
+</div>
                                                 </div>
 
                                                 <div class="row">

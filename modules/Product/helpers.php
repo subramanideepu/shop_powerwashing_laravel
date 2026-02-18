@@ -28,6 +28,7 @@ if (!function_exists('apply_margin')) {
 //                 return apply_margin($basePrice, (float) $category->margin_percentage);
 //             }
 //         }
+
 // $globalMargin = null;
  
 // if (!app()->runningInConsole() && app()->bound('setting')) {

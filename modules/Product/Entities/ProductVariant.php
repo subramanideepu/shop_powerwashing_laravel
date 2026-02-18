@@ -41,6 +41,7 @@ class ProductVariant extends Model
         'in_stock',
         'is_active',
         'is_default',
+        'margin_percentage',
     ];
 
     /**
@@ -70,19 +71,45 @@ class ProductVariant extends Model
     ];
 
 
-    protected static function booted()
-    {
-        static::addActiveGlobalScope();
+   protected static function booted()
+{
+    static::addActiveGlobalScope();
 
-        static::saved(function ($productVariant) {
-            $productVariant->withoutEvents(function () use ($productVariant) {
-                $productVariant->update([
-                    'selling_price' => ($productVariant->hasSpecialPrice() ? $productVariant->getSpecialPrice() : $productVariant->price)->amount(),
-                ]);
-            });
-        });
+   static::saving(function ($variant) {
+
+    $rawPrice = (float) ($variant->attributes['price'] ?? 0);
+
+    // ✅ Base price
+    $basePrice = $variant->hasSpecialPrice()
+        ? (float) $variant->getSpecialPrice()->amount()
+        : $rawPrice;
+
+    // ✅ Variant margin
+    if (is_numeric($variant->margin_percentage)) {
+
+        $variant->selling_price = apply_margin(
+            $basePrice,
+            (float) $variant->margin_percentage
+        );
+
+        return;
     }
 
+    // ✅ Product fallback margin
+    if (is_numeric($variant->product->margin_percentage)) {
+
+        $variant->selling_price = apply_margin(
+            $basePrice,
+            (float) $variant->product->margin_percentage
+        );
+
+        return;
+    }
+
+    // ✅ Raw fallback
+    $variant->selling_price = $basePrice;
+});
+}
 
     public function url()
     {
@@ -104,7 +131,7 @@ class ProductVariant extends Model
 
     public function scopeWithPrice($query)
     {
-        $query->addSelect(['price', 'special_price', 'special_price_type', 'special_price_start', 'special_price_end']);
+        $query->addSelect(['price', 'special_price', 'special_price_type', 'special_price_start', 'special_price_end', 'margin_percentage']);
     }
 
 

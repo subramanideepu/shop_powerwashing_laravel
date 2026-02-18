@@ -32,6 +32,7 @@ class ProductVariantResource extends JsonResource
             'special_price' => $this->special_price?->convertToCurrentCurrency()->amount(),
             'is_active' => $this->is_active,
             'is_default' => $this->is_default,
+             'margin_percentage' => $this->margin_percentage,
         ];
     }
 }
