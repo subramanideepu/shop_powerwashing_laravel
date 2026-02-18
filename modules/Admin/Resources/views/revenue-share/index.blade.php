@@ -164,8 +164,8 @@
             <th>Qty</th>
             <th>Base_Price</th>
             <th>Selling_Price</th>
-            <th>Share 1</th>
-            <th>Share 2</th>
+            <th>Share 1 ({{ setting('share_1') ?? 0 }}%)</th>
+            <th>Share 2 ({{ setting('share_2') ?? 0 }}%)</th>
             <th>Profit/Loss</th>
         </tr>
         </thead>
