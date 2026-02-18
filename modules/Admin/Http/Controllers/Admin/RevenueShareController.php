@@ -61,135 +61,278 @@ class RevenueShareController  {
 
 
 
-    public function index(Request $request)
-    {
-        $filterType = $request->filter_type ?? 'all';
-        $month      = $request->month;
-        $year       = $request->year ?? now()->year;
+    // public function index(Request $request)
+    // {
+    //     $filterType = $request->filter_type ?? 'all';
+    //     $month      = $request->month;
+    //     $year       = $request->year ?? now()->year;
 
-        $share1Percentage = setting('share_1') ?? 0;
-        $share2Percentage = setting('share_2') ?? 0;
+    //     $share1Percentage = setting('share_1') ?? 0;
+    //     $share2Percentage = setting('share_2') ?? 0;
 
-        /*
-        |--------------------------------------------------------------------------
-        | ORDERS QUERY (FIRST TABLE)
-        |--------------------------------------------------------------------------
-        */
+    //     /*
+    //     |--------------------------------------------------------------------------
+    //     | ORDERS QUERY (FIRST TABLE)
+    //     |--------------------------------------------------------------------------
+    //     */
 
-        $ordersQuery = DB::table('orders')
-            ->where('status', 'completed');
+    //     $ordersQuery = DB::table('orders')
+    //         ->where('status', 'completed');
 
-        if ($filterType === 'monthly' && $month) {
-            $ordersQuery->whereYear('created_at', $year)
-                        ->whereMonth('created_at', $month);
-        }
+    //     if ($filterType === 'monthly' && $month) {
+    //         $ordersQuery->whereYear('created_at', $year)
+    //                     ->whereMonth('created_at', $month);
+    //     }
 
-        if ($filterType === 'yearly') {
-            $ordersQuery->whereYear('created_at', $year);
-        }
+    //     if ($filterType === 'yearly') {
+    //         $ordersQuery->whereYear('created_at', $year);
+    //     }
 
-        $orders = $ordersQuery->latest()->get();
+    //     $orders = $ordersQuery->latest()->get();
 
-        /*
-        |--------------------------------------------------------------------------
-        | MAIN CALCULATION (REVENUE + PROFIT)
-        |--------------------------------------------------------------------------
-        */
+    //     /*
+    //     |--------------------------------------------------------------------------
+    //     | MAIN CALCULATION (REVENUE + PROFIT)
+    //     |--------------------------------------------------------------------------
+    //     */
 
-        $calcQuery = DB::table('order_products')
-            ->join('orders', 'orders.id', '=', 'order_products.order_id')
-            ->join('products', 'products.id', '=', 'order_products.product_id')
-            ->where('orders.status', 'completed');
+    //     $calcQuery = DB::table('order_products')
+    //         ->join('orders', 'orders.id', '=', 'order_products.order_id')
+    //         ->join('products', 'products.id', '=', 'order_products.product_id')
+    //         ->where('orders.status', 'completed');
 
-        if ($filterType === 'monthly' && $month) {
-            $calcQuery->whereYear('orders.created_at', $year)
-                      ->whereMonth('orders.created_at', $month);
-        }
+    //     if ($filterType === 'monthly' && $month) {
+    //         $calcQuery->whereYear('orders.created_at', $year)
+    //                   ->whereMonth('orders.created_at', $month);
+    //     }
 
-        if ($filterType === 'yearly') {
-            $calcQuery->whereYear('orders.created_at', $year);
-        }
+    //     if ($filterType === 'yearly') {
+    //         $calcQuery->whereYear('orders.created_at', $year);
+    //     }
 
-        $totals = $calcQuery->select(
+    //     $totals = $calcQuery->select(
 
-            DB::raw('SUM(order_products.line_total) as revenue'),
+    //         DB::raw('SUM(order_products.line_total) as revenue'),
 
-            DB::raw("
-                SUM(
-                    (
-                        order_products.line_total
-                        - (order_products.line_total * {$share1Percentage} / 100)
-                        - (order_products.line_total * {$share2Percentage} / 100)
-                        - (products.price * order_products.qty)
-                    )
-                ) as profit
-            ")
+    //         DB::raw("
+    //             SUM(
+    //                 (
+    //                     order_products.line_total
+    //                     - (order_products.line_total * {$share1Percentage} / 100)
+    //                     - (order_products.line_total * {$share2Percentage} / 100)
+    //                     - (products.price * order_products.qty)
+    //                 )
+    //             ) as profit
+    //         ")
 
-        )->first();
+    //     )->first();
 
-        $revenue = $totals->revenue ?? 0;
-        $profit  = $totals->profit ?? 0;
+    //     $revenue = $totals->revenue ?? 0;
+    //     $profit  = $totals->profit ?? 0;
 
-        $share1 = $revenue * ($share1Percentage / 100);
-        $share2 = $revenue * ($share2Percentage / 100);
+    //     $share1 = $revenue * ($share1Percentage / 100);
+    //     $share2 = $revenue * ($share2Percentage / 100);
 
-        /*
-        |--------------------------------------------------------------------------
-        | INDIVIDUAL ORDER PRODUCTS (SECOND TABLE)
-        |--------------------------------------------------------------------------
-        */
+    //     /*
+    //     |--------------------------------------------------------------------------
+    //     | INDIVIDUAL ORDER PRODUCTS (SECOND TABLE)
+    //     |--------------------------------------------------------------------------
+    //     */
 
-        $productRowsQuery = DB::table('order_products')
-            ->join('orders', 'orders.id', '=', 'order_products.order_id')
-            ->join('products', 'products.id', '=', 'order_products.product_id')
-            ->leftJoin('product_variants', 'product_variants.id', '=', 'order_products.product_variant_id')
-            ->where('orders.status', 'completed')
-            ->select(
-                'orders.id as order_id',
-                'products.slug',
-                'product_variants.name as variant',
-                'order_products.qty',
-                'order_products.unit_price',
-                'order_products.line_total',
-                'products.price as cost_price'
-            );
+    //     $productRowsQuery = DB::table('order_products')
+    //         ->join('orders', 'orders.id', '=', 'order_products.order_id')
+    //         ->join('products', 'products.id', '=', 'order_products.product_id')
+    //         ->leftJoin('product_variants', 'product_variants.id', '=', 'order_products.product_variant_id')
+    //         ->where('orders.status', 'completed')
+    //         ->select(
+    //             'orders.id as order_id',
+    //             'products.slug',
+    //             'product_variants.name as variant',
+    //             'order_products.qty',
+    //             'order_products.unit_price',
+    //             'order_products.line_total',
+    //             'products.price as cost_price'
+    //         );
 
-        if ($filterType === 'monthly' && $month) {
-            $productRowsQuery->whereYear('orders.created_at', $year)
-                             ->whereMonth('orders.created_at', $month);
-        }
+    //     if ($filterType === 'monthly' && $month) {
+    //         $productRowsQuery->whereYear('orders.created_at', $year)
+    //                          ->whereMonth('orders.created_at', $month);
+    //     }
 
-        if ($filterType === 'yearly') {
-            $productRowsQuery->whereYear('orders.created_at', $year);
-        }
+    //     if ($filterType === 'yearly') {
+    //         $productRowsQuery->whereYear('orders.created_at', $year);
+    //     }
 
-        $productRows = $productRowsQuery->get()->map(function ($row) use ($share1Percentage, $share2Percentage) {
+    //     $productRows = $productRowsQuery->get()->map(function ($row) use ($share1Percentage, $share2Percentage) {
 
-            $row->share1 = $row->line_total * ($share1Percentage / 100);
-            $row->share2 = $row->line_total * ($share2Percentage / 100);
+    //         $row->share1 = $row->line_total * ($share1Percentage / 100);
+    //         $row->share2 = $row->line_total * ($share2Percentage / 100);
 
-            $row->profit =
-                $row->line_total
-                - $row->share1
-                - $row->share2
-                - ($row->cost_price * $row->qty);
+    //         $row->profit =
+    //             $row->line_total
+    //             - $row->share1
+    //             - $row->share2
+    //             - ($row->cost_price * $row->qty);
 
-            return $row;
-        });
+    //         return $row;
+    //     });
 
-        return view('admin::revenue-share.index', compact(
-            'revenue',
-            'share1',
-            'share2',
-            'profit',
-            'orders',
-            'productRows',
-            'filterType',
-            'month',
-            'year'
-        ));
+    //     return view('admin::revenue-share.index', compact(
+    //         'revenue',
+    //         'share1',
+    //         'share2',
+    //         'profit',
+    //         'orders',
+    //         'productRows',
+    //         'filterType',
+    //         'month',
+    //         'year'
+    //     ));
+    // }
+
+public function index(Request $request)
+{
+    $filterType = $request->filter_type ?? 'all';
+    $month      = $request->month;
+    $year       = $request->year ?? now()->year;
+
+    $share1Percentage = setting('share_1') ?? 0;
+    $share2Percentage = setting('share_2') ?? 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | ORDERS QUERY
+    |--------------------------------------------------------------------------
+    */
+
+    $ordersQuery = DB::table('orders')
+        ->where('status', 'completed');
+
+    if ($filterType === 'monthly' && $month) {
+        $ordersQuery->whereYear('created_at', $year)
+                    ->whereMonth('created_at', $month);
     }
 
+    if ($filterType === 'yearly') {
+        $ordersQuery->whereYear('created_at', $year);
+    }
+
+    $orders = $ordersQuery->latest()->get();
+
+    /*
+    |--------------------------------------------------------------------------
+    | MAIN TOTALS (REVENUE + PROFIT)
+    |--------------------------------------------------------------------------
+    */
+
+    $calcQuery = DB::table('order_products')
+        ->join('orders', 'orders.id', '=', 'order_products.order_id')
+        ->join('products', 'products.id', '=', 'order_products.product_id')
+        ->leftJoin('product_variants', 'product_variants.id', '=', 'order_products.product_variant_id')
+        ->where('orders.status', 'completed');
+
+    if ($filterType === 'monthly' && $month) {
+        $calcQuery->whereYear('orders.created_at', $year)
+                  ->whereMonth('orders.created_at', $month);
+    }
+
+    if ($filterType === 'yearly') {
+        $calcQuery->whereYear('orders.created_at', $year);
+    }
+
+    $totals = $calcQuery->select(
+
+        DB::raw('SUM(order_products.line_total) as revenue'),
+
+        DB::raw("
+            SUM(
+                (
+                    order_products.line_total
+                    - (order_products.line_total * {$share1Percentage} / 100)
+                    - (order_products.line_total * {$share2Percentage} / 100)
+                    - (
+                        CASE 
+                            WHEN order_products.product_variant_id IS NOT NULL 
+                            THEN product_variants.price
+                            ELSE products.price
+                        END
+                        * order_products.qty
+                    )
+                )
+            ) as profit
+        ")
+
+    )->first();
+
+    $revenue = $totals->revenue ?? 0;
+    $profit  = $totals->profit ?? 0;
+
+    $share1 = $revenue * ($share1Percentage / 100);
+    $share2 = $revenue * ($share2Percentage / 100);
+
+    /*
+    |--------------------------------------------------------------------------
+    | ORDER PRODUCTS BREAKDOWN
+    |--------------------------------------------------------------------------
+    */
+
+    $productRowsQuery = DB::table('order_products')
+        ->join('orders', 'orders.id', '=', 'order_products.order_id')
+        ->join('products', 'products.id', '=', 'order_products.product_id')
+        ->leftJoin('product_variants', 'product_variants.id', '=', 'order_products.product_variant_id')
+        ->where('orders.status', 'completed')
+        ->select(
+            'orders.id as order_id',
+            'products.slug',
+            'product_variants.name as variant',
+            'order_products.qty',
+            'order_products.unit_price',
+            'order_products.line_total',
+
+            DB::raw('
+                CASE 
+                    WHEN order_products.product_variant_id IS NOT NULL 
+                    THEN product_variants.price
+                    ELSE products.price
+                END as cost_price
+            ')
+        );
+
+    if ($filterType === 'monthly' && $month) {
+        $productRowsQuery->whereYear('orders.created_at', $year)
+                         ->whereMonth('orders.created_at', $month);
+    }
+
+    if ($filterType === 'yearly') {
+        $productRowsQuery->whereYear('orders.created_at', $year);
+    }
+
+    $productRows = $productRowsQuery->get()->map(function ($row) use ($share1Percentage, $share2Percentage) {
+
+        $row->share1 = $row->line_total * ($share1Percentage / 100);
+        $row->share2 = $row->line_total * ($share2Percentage / 100);
+
+        $row->profit =
+            $row->line_total
+            - $row->share1
+            - $row->share2
+            - ($row->cost_price * $row->qty);
+
+        return $row;
+    });
+
+    return view('admin::revenue-share.index', compact(
+        'revenue',
+        'share1',
+        'share2',
+        'profit',
+        'orders',
+        'productRows',
+        'filterType',
+        'month',
+        'year'
+    ));
+}
     /**
      * Show the form for creating a new resource.
      */
