@@ -13,6 +13,7 @@ use Modules\Admin\Ui\Facades\TabManager;
 use Modules\Support\Services\PWAService;
 use Illuminate\Contracts\Foundation\Application;
 use Modules\Setting\Http\Requests\UpdateSettingRequest;
+use Modules\Tax\Entities\TaxRate;
 
 class SettingController
 {
@@ -54,7 +55,11 @@ class SettingController
 setting()->set('category_margin_enabled', $request->category_margin_enabled);
 setting()->set('share_1', $request->share_1);
 setting()->set('share_2', $request->share_2);
- return redirect()
+// setting()->set('sales_tax', $request->sales_tax);
+setting()->set('sales_tax', $request->sales_tax);
+
+
+return redirect()
     ->route('admin.dashboard.index')
     ->with('success', trans('setting::messages.settings_updated'));
 }

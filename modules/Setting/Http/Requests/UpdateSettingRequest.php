@@ -46,6 +46,7 @@ class UpdateSettingRequest extends Request
             'global_margin_percentage' => 'nullable|numeric|min:0|max:100',
             'share_1' => 'required|numeric|min:0|max:100',
             'share_2' => 'required|numeric|min:0|max:100',
+            'sales_tax' => 'nullable|numeric|min:0',
             'translatable.store_name' => 'required',
             'store_phone' => ['required'],
             'store_email' => 'required|email',

@@ -24,6 +24,18 @@
         'required' => false,
     ]
 )}}
+{{ Form::number(
+    'sales_tax',
+    'Sales Tax (%)',
+    $errors,
+    $settings,
+    [
+        'min' => 0,
+        'step' => 0.01,
+        'labelCol' => 3,
+        'required' => false,
+    ]
+)}}
 
     </div>
 </div>
