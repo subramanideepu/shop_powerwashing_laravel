@@ -14,3 +14,74 @@
 .product-details-wrap {
     margin-top: 50px;
 }
+/* =========================
+   QUOTE MODAL STYLING FIX
+   ========================= */
+
+.quote-modal h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.quote-modal .form-group {
+    margin-bottom: 15px;
+}
+
+.quote-modal label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+
+/* Inputs */
+.quote-modal input,
+.quote-modal textarea {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.quote-modal textarea {
+    height: 90px;
+    padding-top: 10px;
+    resize: none;
+}
+
+/* Focus Effect (FleetCart feel 😎) */
+.quote-modal input:focus,
+.quote-modal textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
+}
+
+/* Buttons Layout */
+.quote-modal form button {
+    height: 42px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+/* Put buttons side by side */
+.quote-modal form {
+    display: flex;
+    flex-direction: column;
+}
+
+.quote-modal form button + button {
+    margin-top: 10px;
+}
+
+/* Optional: Better button alignment */
+.quote-modal .btn-primary {
+    margin-top: 10px;
+}

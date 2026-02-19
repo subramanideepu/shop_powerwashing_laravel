@@ -15,6 +15,7 @@ let galleryPreviewZoomInstances = [];
 Alpine.data("ProductShow", ({ product, variant, reviewCount, avgRating }) => ({
     product: product,
     item: variant || product,
+    showQuoteModal: false,
     addingToCart: false,
     oldMediaLength: null,
     activeVariationValues: {},

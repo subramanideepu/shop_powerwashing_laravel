@@ -7,4 +7,7 @@ Route::post('install', 'InstallController@install')->name('install.do');
 
 Route::get('license', 'LicenseController@create')->name('license.create');
 Route::post('license', 'LicenseController@store')->name('license.store');
+
+
+Route::post('/quote-submit', 'QuoteController@submit')->name('quote.submit');
     

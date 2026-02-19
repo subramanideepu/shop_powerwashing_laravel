@@ -171,10 +171,13 @@
 
                 @else
 
-                    <a href="https://shop.powerwashing.com/contact"
-                       class="btn btn-primary btn-add-to-cart">
-                        Request a Quote
-                    </a>
+                    <button 
+        type="button"
+        class="btn btn-primary btn-add-to-cart"
+        @click="showQuoteModal = true"
+    >
+        Get Quote
+    </button>
 
                 @endif
 
@@ -213,5 +216,47 @@
         </ul>
 
         @include('storefront::public.products.show.social_share')
+    </div>
+</div>
+
+<div x-show="showQuoteModal" class="quote-modal-overlay">
+    <div class="quote-modal">
+
+        <h3>Get Quote</h3>
+
+        <form method="POST" action="{{ route('quote.submit') }}">
+            @csrf
+
+            <input type="hidden" name="product_name" value="{{ $product->name }}">
+            <input type="hidden" name="product_url" value="{{ url()->current() }}">
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" name="phone" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Message</label>
+                <textarea name="message"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Submit Quote
+            </button>
+
+            <button 
+                type="button"
+                class="btn btn-secondary"
+                @click="showQuoteModal = false"
+            >
+                Close
+            </button>
+        </form>
+
     </div>
 </div>
