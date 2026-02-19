@@ -408,22 +408,29 @@ class Cart extends DarryldecodeCart implements JsonSerializable
         return $this->shippingMethod()->cost();
     }
 
+public function taxes()
+{
+    $taxes = new Collection();
 
-    public function taxes()
-    {
-        if (!$this->hasTax()) {
-            return new Collection();
-        }
+    $taxPercentage = setting('sales_tax') ?? 0;
 
-        $taxConditions = $this->getConditionsByType('tax');
-        $taxRates = TaxRate::whereIn('id', $this->getTaxRateIds($taxConditions))->get();
+    if ($taxPercentage > 0) {
 
-        return $taxConditions->map(function ($taxCondition) use ($taxRates) {
-            $taxRate = $taxRates->where('id', $taxCondition->getAttribute('tax_rate_id'))->first();
+        $salesTaxAmount = ($this->subTotal()->amount() * $taxPercentage) / 100;
 
-            return new CartTax($this, $taxRate, $taxCondition);
-        });
+        $taxes->push([
+            'name' => 'Sales Tax (' . $taxPercentage . '%)',
+
+            'amount' => [
+                'inCurrentCurrency' => [
+                    'amount' => $salesTaxAmount,
+                ],
+            ],
+        ]);
     }
+
+    return $taxes;
+}
 
 
     public function hasTax()
@@ -512,10 +519,16 @@ class Cart extends DarryldecodeCart implements JsonSerializable
     }
 
 
-    private function calculateTax()
-    {
-        return $this->taxes()->sum(function ($cartTax) {
-            return $cartTax->amount()->amount();
-        });
+   private function calculateTax()
+{
+    $tax = 0;
+
+    $taxPercentage = setting('sales_tax') ?? 0;
+
+    if ($taxPercentage > 0) {
+        $tax += ($this->subTotal()->amount() * $taxPercentage) / 100;
     }
+
+    return $tax;
+}
 }

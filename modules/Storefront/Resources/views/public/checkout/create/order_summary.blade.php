@@ -102,6 +102,7 @@
 
                 <template x-if="hasShippingMethod">
                     <li>
+                        
                         <label>
                             {{ trans('storefront::checkout.shipping_cost') }}
                         </label>
