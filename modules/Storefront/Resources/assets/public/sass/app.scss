@@ -73,3 +73,85 @@ $grid-columns: 18;
         background: var(--color-primary);
     }
 }
+.quote-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.quote-modal {
+    background: white;
+    width: 420px;
+    max-width: 95%;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+    animation: quoteFade 0.25s ease;
+}
+
+@keyframes quoteFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.quote-modal h3 {
+    font-size: 20px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.quote-modal .form-group {
+    margin-bottom: 14px;
+}
+
+.quote-modal input,
+.quote-modal textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.quote-modal textarea {
+    resize: none;
+    height: 90px;
+}
+
+.quote-modal .btn {
+    width: 100%;
+    margin-top: 8px;
+}
+.quote-modal {
+    position: relative;   
+}
+.quote-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+
+    border: none;
+    background: transparent;
+
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+    color: #888;
+
+    padding: 0;
+}
+
+.quote-close-btn:hover {
+    color: #000;
+}

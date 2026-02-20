@@ -10,4 +10,5 @@ Route::post('license', 'LicenseController@store')->name('license.store');
 
 
 Route::post('/quote-submit', 'QuoteController@submit')->name('quote.submit');
-    
+   
+

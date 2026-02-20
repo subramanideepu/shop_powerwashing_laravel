@@ -219,7 +219,7 @@
     </div>
 </div>
 
-<div x-show="showQuoteModal" class="quote-modal-overlay">
+<div x-cloak  x-show="showQuoteModal" class="quote-modal-overlay">
     <div class="quote-modal">
 
         <h3>Get Quote</h3>
@@ -229,7 +229,11 @@
 
             <input type="hidden" name="product_name" value="{{ $product->name }}">
             <input type="hidden" name="product_url" value="{{ url()->current() }}">
-
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" x-model="quoteForm.name" required>
+            </div>   
+            
             <div class="form-group">
                 <label>Phone</label>
                 <input type="text" name="phone" required>
@@ -250,13 +254,39 @@
             </button>
 
             <button 
-                type="button"
-                class="btn btn-secondary"
-                @click="showQuoteModal = false"
-            >
-                Close
-            </button>
+    type="button"
+    class="quote-close-btn"
+    @click="showQuoteModal = false"
+>
+    ✕
+</button>
         </form>
 
     </div>
 </div>
+<style>
+.quote-modal {
+    position: relative;   /* ⭐ THIS IS THE KEY */
+}
+.quote-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+
+    border: none;
+    background: transparent;
+
+    font-size: 20px;
+    line-height: 1;
+
+    cursor: pointer;
+    color: #888;
+
+    padding: 0;
+}
+
+.quote-close-btn:hover {
+    color: #000;
+}
+
+</style>

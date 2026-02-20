@@ -98,6 +98,7 @@
     </div>
 
     <div class="product-card-bottom">
+        <template x-if="!isQuoteProduct">
         <div class="product-price">
             <template x-if="hasSpecialPrice">
                 <span class="special-price" x-text="formatCurrency(specialPrice)"></span>
@@ -106,7 +107,16 @@
             <span class="previous-price" x-text="formatCurrency(regularPrice)"></span>
             {{-- @dump('hi') --}}
         </div>
-
+        </template>
+<template x-if="isQuoteProduct">
+    <button
+        class="btn btn-primary btn-add-to-cart" style="width:100%; background-color: var(--color-primary);"
+        @click="$store.quote.open(product)"
+    >
+        Get Quote
+    </button>
+</template>
+<template x-if="!isQuoteProduct">
         <template x-if="hasNoOption || isOutOfStock">
             <button
                 class="btn btn-primary btn-add-to-cart"
@@ -140,5 +150,6 @@
                 </svg>
             </a>
         </template>
+</template>
     </div>
 </div>

@@ -12,6 +12,7 @@ let galleryPreviewSlider;
 let galleryPreviewLightbox;
 let galleryPreviewZoomInstances = [];
 
+
 Alpine.data("ProductShow", ({ product, variant, reviewCount, avgRating }) => ({
     product: product,
     item: variant || product,
@@ -36,6 +37,9 @@ Alpine.data("ProductShow", ({ product, variant, reviewCount, avgRating }) => ({
         options: {},
     },
     errors: new Errors(),
+
+    
+
 
     get productName() {
         return this.product.name;
@@ -107,6 +111,11 @@ Alpine.data("ProductShow", ({ product, variant, reviewCount, avgRating }) => ({
         return this.item.is_out_of_stock;
     },
 
+
+//     get isQuoteProduct() {
+//     return Number(this.item.selling_price.inCurrentCurrency.amount) <= 0;
+// },
+
     get doesManageStock() {
         return this.item.does_manage_stock;
     },
@@ -177,6 +186,7 @@ Alpine.data("ProductShow", ({ product, variant, reviewCount, avgRating }) => ({
     },
 
     init() {
+        this.showQuoteModal = false;  
         galleryPreviewSlider = this.initGalleryPreviewSlider();
         galleryPreviewLightbox = this.initGalleryPreviewLightbox();
 

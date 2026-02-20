@@ -8,24 +8,26 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\QuoteMail;
 
+
 class QuoteController extends Controller
 {
     public function submit(Request $request): JsonResponse
     {
        
         $request->validate([
-            'product_name' => 'required|string|max:255',
-            'product_url'  => 'required|url',
-            'phone'        => 'required|string|max:20',
-            'email'        => 'required|email|max:255',
-            'message'      => 'nullable|string',
-        ]);
-
+    'product_name' => 'required|string|max:255',
+    'product_url'  => 'required|url',
+    'name'         => 'required|string|max:255',
+    'phone'        => 'required|string|max:20',
+    'email'        => 'required|email|max:255',
+    'message'      => 'nullable|string',
+]);
       
         Mail::to(setting('store_email'))->send(
             new QuoteMail([
                 'product_name' => $request->product_name,
                 'product_url'  => $request->product_url,
+                'name'         => $request->name,
                 'phone'        => $request->phone,
                 'email'        => $request->email,
                 'message'      => $request->message,

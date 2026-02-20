@@ -98,6 +98,55 @@
             @include('storefront::public.layouts.newsletter_popup')
             @include('storefront::public.layouts.cookie_bar')
             @include('storefront::public.layouts.scroll_to_top')
+          <div x-data="App">
+   <div x-cloak x-show="$store.quote.show" class="quote-modal-overlay">
+
+    <div class="quote-modal">
+
+        <h3>Get Quote</h3>
+
+        <form @submit.prevent="submitQuote">
+
+            <input type="hidden" x-model="$store.quote.product?.name">
+            <input type="hidden" x-model="$store.quote.product?.url">
+
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" x-model="quoteForm.name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" x-model="quoteForm.phone" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" x-model="quoteForm.email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Message</label>
+                <textarea x-model="quoteForm.message"></textarea>
+            </div>
+
+            <button class="btn btn-primary" :class="{ 'btn-loading': loading }">
+                Submit Quote
+            </button>
+
+              <button 
+        type="button"
+        class="quote-close-btn"
+        @click="$store.quote.close()"
+    >
+        ✕
+    </button>
+
+        </form>
+
+    </div>
+</div>
+</div>
         </div>
 
         @stack('pre-scripts')
