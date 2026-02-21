@@ -57,6 +57,11 @@ setting()->set('share_1', $request->share_1);
 setting()->set('share_2', $request->share_2);
 // setting()->set('sales_tax', $request->sales_tax);
 setting()->set('sales_tax', $request->sales_tax);
+setting()->set('super_light_rate', $request->super_light_rate);
+setting()->set('light_rate', $request->light_rate);
+setting()->set('medium_rate', $request->medium_rate);
+setting()->set('heavy_rate', $request->heavy_rate);
+setting()->set('super_heavy_rate', $request->super_heavy_rate);
 
 
 return redirect()

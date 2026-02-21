@@ -42,9 +42,10 @@ class SettingTabs extends Tabs
             ->add($this->google());
 
         $this->group('shipping_methods', trans('setting::settings.tabs.group.shipping_methods'))
-            ->add($this->freeShipping())
-            ->add($this->localPickup())
-            ->add($this->flatRate());
+            // ->add($this->freeShipping())
+            // ->add($this->localPickup())
+            // ->add($this->flatRate());
+            ->add($this->shippingType());
 
         $this->group('payment_methods', trans('setting::settings.tabs.group.payment_methods'))
             ->add($this->paypal())
@@ -301,40 +302,57 @@ class SettingTabs extends Tabs
     }
 
 
-    private function freeShipping()
-    {
-        return tap(new Tab('free_shipping', trans('setting::settings.tabs.free_shipping')), function (Tab $tab) {
-            $tab->weight(50);
+    // private function freeShipping()
+    // {
+    //     return tap(new Tab('free_shipping', trans('setting::settings.tabs.free_shipping')), function (Tab $tab) {
+    //         $tab->weight(50);
 
-            $tab->fields(['free_shipping_enabled', 'translatable.free_shipping_label']);
+    //         $tab->fields(['free_shipping_enabled', 'translatable.free_shipping_label']);
 
-            $tab->view('setting::admin.settings.tabs.free_shipping');
-        });
-    }
-
-
-    private function localPickup()
-    {
-        return tap(new Tab('local_pickup', trans('setting::settings.tabs.local_pickup')), function (Tab $tab) {
-            $tab->weight(55);
-
-            $tab->fields(['local_pickup_enabled', 'translatable.local_pickup_label', 'local_pickup_cost']);
-
-            $tab->view('setting::admin.settings.tabs.local_pickup');
-        });
-    }
+    //         $tab->view('setting::admin.settings.tabs.free_shipping');
+    //     });
+    // }
 
 
-    private function flatRate()
-    {
-        return tap(new Tab('flat_rate', trans('setting::settings.tabs.flat_rate')), function (Tab $tab) {
-            $tab->weight(60);
+    // private function localPickup()
+    // {
+    //     return tap(new Tab('local_pickup', trans('setting::settings.tabs.local_pickup')), function (Tab $tab) {
+    //         $tab->weight(55);
 
-            $tab->fields(['flat_rate_enabled', 'translatable.flat_rate_label', 'flat_rate_cost']);
+    //         $tab->fields(['local_pickup_enabled', 'translatable.local_pickup_label', 'local_pickup_cost']);
 
-            $tab->view('setting::admin.settings.tabs.flat_rate');
-        });
-    }
+    //         $tab->view('setting::admin.settings.tabs.local_pickup');
+    //     });
+    // }
+
+
+    // private function flatRate()
+    // {
+    //     return tap(new Tab('flat_rate', trans('setting::settings.tabs.flat_rate')), function (Tab $tab) {
+    //         $tab->weight(60);
+
+    //         $tab->fields(['flat_rate_enabled', 'translatable.flat_rate_label', 'flat_rate_cost']);
+
+    //         $tab->view('setting::admin.settings.tabs.flat_rate');
+    //     });
+    // }
+
+    private function shippingType()
+{
+    return tap(new Tab('shipping_type', 'Shipping Type'), function (Tab $tab) {
+        $tab->weight(65);
+
+        $tab->fields([
+            'super_light_rate',
+            'light_rate',
+            'medium_rate',
+            'heavy_rate',
+            'super_heavy_rate',
+        ]);
+
+        $tab->view('setting::admin.settings.tabs.shipping_type');
+    });
+}
 
 
     private function paypal()

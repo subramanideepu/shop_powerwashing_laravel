@@ -24,44 +24,56 @@ class ShippingServiceProvider extends ServiceProvider
         return;
     }
 
-        $this->registerFreeShipping();
-        $this->registerLocalPickup();
-        $this->registerFlatRate();
+        // $this->registerFreeShipping();
+        // $this->registerLocalPickup();
+         $this->registerFlatRate();
     }
 
 
-    private function registerFreeShipping()
-    {
-        if (!setting('free_shipping_enabled')) {
-            return;
+    // private function registerFreeShipping()
+    // {
+    //     if (!setting('free_shipping_enabled')) {
+    //         return;
+    //     }
+
+    //     ShippingMethod::register('free_shipping', function () {
+    //         return new Method('free_shipping', setting('free_shipping_label'), 0);
+    //     });
+    // }
+
+
+    // private function registerLocalPickup()
+    // {
+    //     if (!setting('local_pickup_enabled')) {
+    //         return;
+    //     }
+
+    //     ShippingMethod::register('local_pickup', function () {
+    //         return new Method('local_pickup', setting('local_pickup_label'), setting('local_pickup_cost') ?? 0);
+    //     });
+    // }
+
+
+   private function registerFlatRate()
+{
+    if (!setting('flat_rate_enabled')) {
+        return;
+    }
+
+    ShippingMethod::register('flat_rate', function () {
+
+        $cost = app(\Modules\Shipping\Services\CategoryShippingCalculator::class)->calculate();
+        //   dd($cost); 
+
+        if (is_null($cost)) {
+            return null; // Hide method if category misconfigured
         }
 
-        ShippingMethod::register('free_shipping', function () {
-            return new Method('free_shipping', setting('free_shipping_label'), 0);
-        });
-    }
-
-
-    private function registerLocalPickup()
-    {
-        if (!setting('local_pickup_enabled')) {
-            return;
-        }
-
-        ShippingMethod::register('local_pickup', function () {
-            return new Method('local_pickup', setting('local_pickup_label'), setting('local_pickup_cost') ?? 0);
-        });
-    }
-
-
-    private function registerFlatRate()
-    {
-        if (!setting('flat_rate_enabled')) {
-            return;
-        }
-
-        ShippingMethod::register('flat_rate', function () {
-            return new Method('flat_rate', setting('flat_rate_label'), setting('flat_rate_cost') ?? 0);
-        });
-    }
+        return new Method(
+            'flat_rate',
+            setting('flat_rate_label'),
+            $cost
+        );
+    });
+}
 }

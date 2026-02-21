@@ -92,17 +92,23 @@ class UpdateSettingRequest extends Request
             'google_login_client_id' => 'required_if:google_login_enabled,1',
             'google_login_client_secret' => 'required_if:google_login_enabled,1',
 
-            'free_shipping_enabled' => 'required|boolean',
-            'free_shipping_min_amount' => 'nullable|numeric',
-            'translatable.free_shipping_label' => 'required_if:free_shipping_enabled,1',
+            'super_light_rate' => 'nullable|numeric|min:0',
+'light_rate' => 'nullable|numeric|min:0',
+'medium_rate' => 'nullable|numeric|min:0',
+'heavy_rate' => 'nullable|numeric|min:0',
+'super_heavy_rate' => 'nullable|numeric|min:0',
 
-            'local_pickup_enabled' => 'required|boolean',
-            'translatable.local_pickup_label' => 'required_if:local_pickup_enabled,1',
-            'local_pickup_cost' => ['required_if:local_pickup_enabled,1', 'nullable', 'numeric'],
+            // 'free_shipping_enabled' => 'required|boolean',
+            // 'free_shipping_min_amount' => 'nullable|numeric',
+            // 'translatable.free_shipping_label' => 'required_if:free_shipping_enabled,1',
 
-            'flat_rate_enabled' => 'required|boolean',
-            'translatable.flat_rate_label' => 'required_if:flat_rate_enabled,1',
-            'flat_rate_cost' => ['required_if:flat_rate_enabled,1', 'nullable', 'numeric'],
+            // 'local_pickup_enabled' => 'required|boolean',
+            // 'translatable.local_pickup_label' => 'required_if:local_pickup_enabled,1',
+            // 'local_pickup_cost' => ['required_if:local_pickup_enabled,1', 'nullable', 'numeric'],
+
+            // 'flat_rate_enabled' => 'required|boolean',
+            // 'translatable.flat_rate_label' => 'required_if:flat_rate_enabled,1',
+            // 'flat_rate_cost' => ['required_if:flat_rate_enabled,1', 'nullable', 'numeric'],
 
             'paypal_enabled' => 'required|boolean',
             'translatable.paypal_label' => 'required_if:paypal_enabled,1',

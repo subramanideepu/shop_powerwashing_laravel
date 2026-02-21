@@ -60,7 +60,22 @@
         'step' => '0.01',
         'placeholder' => 'Leave empty to use global margin'
     ]
-) }}                              </div>
+) }}          
+{{ Form::select(
+    'shipping_type',
+    'Shipping Type',
+    $errors,
+    [
+        '' => 'Select Shipping Type',
+        'super_light' => 'Super Light',
+        'light' => 'Light',
+        'medium' => 'Medium',
+        'heavy' => 'Heavy',
+        'super_heavy' => 'Super Heavy',
+    ],
+    old('shipping_type', $category->shipping_type ?? null)
+) }}
+</div>
                                 </div>
                             </div>
 

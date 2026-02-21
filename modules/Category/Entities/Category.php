@@ -30,7 +30,7 @@ class Category extends Model implements Sitemapable
      *
      * @var array
      */
-    protected $fillable = ['parent_id', 'slug', 'position', 'is_searchable', 'is_active', 'margin_percentage'];
+    protected $fillable = ['parent_id', 'slug', 'position', 'is_searchable', 'is_active', 'margin_percentage', 'shipping_type',];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,6 +48,7 @@ class Category extends Model implements Sitemapable
         'is_searchable' => 'boolean',
         'is_active' => 'boolean',
         'margin_percentage' => 'float',
+         'shipping_type' => 'string', 
 
     ];
 
