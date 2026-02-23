@@ -44,7 +44,8 @@ class SettingTabs extends Tabs
         $this->group('shipping_methods', trans('setting::settings.tabs.group.shipping_methods'))
             ->add($this->freeShipping())
             ->add($this->localPickup())
-            ->add($this->flatRate());
+            ->add($this->flatRate())
+             ->add($this->shippingTypes());
 
         $this->group('payment_methods', trans('setting::settings.tabs.group.payment_methods'))
             ->add($this->paypal())
@@ -63,6 +64,23 @@ class SettingTabs extends Tabs
             ->add($this->checkPayment());
     }
 
+    private function shippingTypes()
+{
+    return tap(new Tab('shipping_types', 'Shipping Types'), function (Tab $tab) {
+
+        $tab->weight(65);
+
+        $tab->fields([
+            'super_light_cost',
+            'light_cost',
+            'medium_cost',
+            'heavy_cost',
+            'super_heavy_cost',
+        ]);
+
+        $tab->view('setting::admin.settings.tabs.shipping_types');
+    });
+}
 
     private function general()
     {

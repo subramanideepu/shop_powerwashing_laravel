@@ -404,9 +404,43 @@ class Cart extends DarryldecodeCart implements JsonSerializable
 
 
     public function shippingCost()
-    {
-        return $this->shippingMethod()->cost();
+{
+    if ($this->allItemsAreVirtual()) {
+        return Money::inDefaultCurrency(0);
     }
+
+    $shippingCosts = [
+        'super_light' => setting('super_light_cost') ?? 0,
+        'light'       => setting('light_cost') ?? 0,
+        'medium'      => setting('medium_cost') ?? 0,
+        'heavy'       => setting('heavy_cost') ?? 0,
+        'super_heavy' => setting('super_heavy_cost') ?? 0,
+    ];
+
+    $highestShipping = $this->items()
+
+        ->flatMap(function ($cartItem) {
+
+            return $cartItem->product->categories->map(function ($category) {
+
+                
+                return $category->shipping_type 
+                    ?? optional($category->parent)->shipping_type;
+
+            });
+
+        })
+
+        ->filter()
+
+        ->map(function ($type) use ($shippingCosts) {
+            return $shippingCosts[$type] ?? 0;
+        })
+
+        ->max();
+
+    return Money::inDefaultCurrency($highestShipping ?? 0);
+}
 
 public function taxes()
 {
@@ -442,7 +476,8 @@ public function taxes()
     public function total()
     {
         return $this->subTotal()
-            ->add($this->shippingMethod()->cost())
+            // ->add($this->shippingMethod()->cost())
+             ->add($this->shippingCost())
             ->subtract($this->coupon()->value())
             ->add($this->tax());
     }
