@@ -6,40 +6,35 @@ use Modules\Cart\Facades\Cart;
 
 class CategoryShippingCalculator
 {
-    public function calculate()
-    {
-        $rates = [];
+   public function calculate()
+{
+    $rates = [];
 
-        foreach (Cart::items() as $item) {
-             //dd(Cart::items());
+    foreach (Cart::items() as $item) {
 
-            $product = $item->product;
+        $product = $item->product;
 
-            if (!$product) {
-                return 0;
-            }
-
-            // ✅ Ensure categories loaded
-            $product->loadMissing('categories');
-
-            $category = $product->categories
-                ->whereNotNull('shipping_type')
-                ->first();
-
-        //    $cost = (float) ($cost ?? 0);
-
-            $rate = $this->resolveRate($category->shipping_type);
-
-            if (is_null($rate)) {
-                return 0;
-            }
-
-            $rates[] = (float) $rate;
+        if (!$product) {
+            return 0;
         }
 
-        return empty($rates) ? 0 : max($rates);
+        $product->loadMissing('categories');
+
+        $category = $product->categories
+            ->whereNotNull('shipping_type')
+            ->first();
+
+        if (!$category) {
+            return 0;   // ✅ MOST IMPORTANT FIX
+        }
+
+        $rate = $this->resolveRate($category->shipping_type);
+
+        $rates[] = (float) $rate;
     }
 
+    return empty($rates) ? 0 : max($rates);
+}
     private function resolveRate($type)
     {
         return match ($type) {

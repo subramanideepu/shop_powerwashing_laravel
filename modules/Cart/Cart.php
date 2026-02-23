@@ -57,12 +57,14 @@ class Cart extends DarryldecodeCart implements JsonSerializable
      */
     public function store($productId, $variantId, $qty, $options = []): void
     {
-         dd("STORE HIT", $productId, $variantId, $qty);
+         //dd("STORE HIT", $productId, $variantId, $qty);
         $options = array_filter($options);
         $variations = [];
 
         $product = Product::with('files', 'categories', 'taxClass')->findOrFail($productId);
-        $variant = ProductVariant::find($variantId);
+        $variant = $variantId ? ProductVariant::find($variantId) : null;
+        // $variant = ProductVariant::find($variantId);
+        
         $item = $variant ?? $product;
 
         if ($variant) {

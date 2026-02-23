@@ -42,18 +42,31 @@ class CartItemController extends Controller
      *
      * @return \Modules\Cart\Cart
      */
-    public function store(StoreCartItemRequest $request)
-    {
+  public function store(StoreCartItemRequest $request)
+{
+    try {
+
         Cart::store(
             $request->product_id,
-            $request->variant_id,
+            $request->variant_id ?? null,
             $request->qty,
             $request->options ?? [],
         );
 
         return Cart::instance();
-    }
 
+    } catch (\Throwable $e) {
+
+        dd($e->getMessage(), $e->getTraceAsString());
+    }
+}
+
+//     public function store(StoreCartItemRequest $request)
+// {
+//     session(['test_cart' => 'WORKING']);
+
+//     dd(session()->all());
+// }
 
     /**
      * Update the specified resource in storage.

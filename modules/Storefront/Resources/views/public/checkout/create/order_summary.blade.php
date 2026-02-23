@@ -100,7 +100,7 @@
                     </li>
                 </template>
 
-                <template x-if="hasShippingMethod">
+                {{-- <template x-if="hasShippingMethod">
                     <li>
                         
                         <label>
@@ -117,7 +117,7 @@
                         >
                         </span>
                     </li>
-                </template>
+                </template> --}}
             </ul>
 
             <div class="order-summary-total">

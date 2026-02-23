@@ -98,13 +98,14 @@ class CartItem implements JsonSerializable
     /**
      * @return mixed
      */
-    private function getProduct()
-    {
-        return Product::withName()
-            ->addSelect('id', 'in_stock', 'manage_stock', 'qty', 'is_active')
-            ->where('id', $this->product->id)
-            ->first();
-    }
+   private function getProduct()
+{
+    return Product::withoutGlobalScopes()
+        ->withName()
+        ->addSelect('id', 'in_stock', 'manage_stock', 'qty', 'is_active')
+        ->where('id', $this->product->id)
+        ->first();
+}
 
 
     /**
@@ -112,9 +113,10 @@ class CartItem implements JsonSerializable
      */
     private function getVariant()
     {
-        return ProductVariant::addSelect('id', 'in_stock', 'manage_stock', 'qty', 'is_active')
-            ->where('id', $this->variant->id)
-            ->first();
+       return ProductVariant::withoutGlobalScopes()
+    ->addSelect('id', 'in_stock', 'manage_stock', 'qty', 'is_active')
+    ->where('id', $this->variant->id)
+    ->first();
     }
 
 
