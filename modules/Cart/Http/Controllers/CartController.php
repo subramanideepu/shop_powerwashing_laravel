@@ -13,6 +13,7 @@ class CartController
      */
     public function index()
     {
+        dd(Cart::items());
         return view('storefront::public.cart.index')->with([
             'crossSellProducts' => Cart::crossSellProducts()
         ]);

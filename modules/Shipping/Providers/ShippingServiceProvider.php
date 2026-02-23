@@ -54,7 +54,7 @@ class ShippingServiceProvider extends ServiceProvider
     // }
 
 
-   private function registerFlatRate()
+  private function registerFlatRate()
 {
     if (!setting('flat_rate_enabled')) {
         return;
@@ -63,16 +63,11 @@ class ShippingServiceProvider extends ServiceProvider
     ShippingMethod::register('flat_rate', function () {
 
         $cost = app(\Modules\Shipping\Services\CategoryShippingCalculator::class)->calculate();
-        //   dd($cost); 
-
-        if (is_null($cost)) {
-            return null; // Hide method if category misconfigured
-        }
 
         return new Method(
             'flat_rate',
-            setting('flat_rate_label'),
-            $cost
+            'Shipping',
+            (float) $cost
         );
     });
 }

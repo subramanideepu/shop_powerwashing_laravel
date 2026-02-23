@@ -57,6 +57,7 @@ class Cart extends DarryldecodeCart implements JsonSerializable
      */
     public function store($productId, $variantId, $qty, $options = []): void
     {
+         dd("STORE HIT", $productId, $variantId, $qty);
         $options = array_filter($options);
         $variations = [];
 
@@ -370,7 +371,7 @@ class Cart extends DarryldecodeCart implements JsonSerializable
             'quantity' => $this->getTotalQuantity(),
             'availableShippingMethods' => $this->availableShippingMethods(),
             'subTotal' => $this->subTotal(),
-            'shippingMethodName' => $this->shippingMethod()->name(),
+            'shippingMethodName' => 'Shipping Type',
             'shippingCost' => $this->shippingCost(),
             'coupon' => $this->coupon(),
             'taxes' => $this->taxes(),
@@ -402,11 +403,12 @@ class Cart extends DarryldecodeCart implements JsonSerializable
         return Money::inDefaultCurrency($this->getSubTotal())->add($this->optionsPrice());
     }
 
+public function shippingCost()
+{
+    $shippingCost = app(\Modules\Shipping\Services\CategoryShippingCalculator::class)->calculate();
 
-    public function shippingCost()
-    {
-        return $this->shippingMethod()->cost();
-    }
+    return Money::inDefaultCurrency($shippingCost ?? 0);
+}
 
 public function taxes()
 {
@@ -442,7 +444,8 @@ public function taxes()
     public function total()
     {
         return $this->subTotal()
-            ->add($this->shippingMethod()->cost())
+                    ->add($this->shippingCost())
+
             ->subtract($this->coupon()->value())
             ->add($this->tax());
     }

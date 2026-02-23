@@ -18,8 +18,8 @@ class OrderService
     {
         $this->mergeShippingAddress($request);
         $this->saveAddress($request);
-        $this->addShippingMethodToCart($request);
-
+        // $this->addShippingMethodToCart($request);
+    
         return tap($this->store($request), function ($order) {
             $this->storeOrderProducts($order);
             $this->storeOrderDownloads($order);
@@ -110,16 +110,17 @@ class OrderService
     }
 
 
-    private function addShippingMethodToCart($request)
-    {
-        if (!Cart::allItemsAreVirtual() && !Cart::hasShippingMethod()) {
-            Cart::addShippingMethod(ShippingMethod::get($request->shipping_method));
-        }
-    }
+    // private function addShippingMethodToCart($request)
+    // {
+    //     if (!Cart::allItemsAreVirtual() && !Cart::hasShippingMethod()) {
+    //         Cart::addShippingMethod(ShippingMethod::get($request->shipping_method));
+    //     }
+    // }
 
 
     private function store($request)
     {
+        $shippingCost = app(\Modules\Shipping\Services\CategoryShippingCalculator::class)->calculate();
         return Order::create([
             'customer_id' => auth()->id(),
             'customer_email' => $request->customer_email,
@@ -143,8 +144,8 @@ class OrderService
             'shipping_zip' => $request->shipping['zip'],
             'shipping_country' => $request->shipping['country'],
             'sub_total' => Cart::subTotal()->amount(),
-            'shipping_method' => Cart::shippingMethod()->name(),
-            'shipping_cost' => Cart::shippingCost()->amount(),
+            'shipping_method' => 'Shipping Type',
+    'shipping_cost' => $shippingCost,
             'coupon_id' => Cart::coupon()->id(),
             'discount' => Cart::discount()->amount(),
             'total' => Cart::total()->amount(),

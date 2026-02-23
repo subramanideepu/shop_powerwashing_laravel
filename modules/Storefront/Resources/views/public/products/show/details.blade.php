@@ -227,8 +227,8 @@
         <form method="POST" action="{{ route('quote.submit') }}">
             @csrf
 
-            <input type="hidden" name="product_name" value="{{ $product->name }}">
-            <input type="hidden" name="product_url" value="{{ url()->current() }}">
+            {{-- <input type="hidden" name="product_name" value="{{ $product->name }}">
+            <input type="hidden" name="product_url" value="{{ url()->current() }}"> --}}
             <div class="form-group">
                 <label>Name</label>
                 <input type="text" x-model="quoteForm.name" required>

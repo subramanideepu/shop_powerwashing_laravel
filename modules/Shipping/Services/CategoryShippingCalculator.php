@@ -11,12 +11,12 @@ class CategoryShippingCalculator
         $rates = [];
 
         foreach (Cart::items() as $item) {
-             dd(Cart::items());
+             //dd(Cart::items());
 
             $product = $item->product;
 
             if (!$product) {
-                return null;
+                return 0;
             }
 
             // ✅ Ensure categories loaded
@@ -26,14 +26,12 @@ class CategoryShippingCalculator
                 ->whereNotNull('shipping_type')
                 ->first();
 
-            if (!$category) {
-                return null;
-            }
+        //    $cost = (float) ($cost ?? 0);
 
             $rate = $this->resolveRate($category->shipping_type);
 
             if (is_null($rate)) {
-                return null;
+                return 0;
             }
 
             $rates[] = (float) $rate;

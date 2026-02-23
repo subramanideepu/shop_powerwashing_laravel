@@ -28,9 +28,9 @@ class StoreOrderRequest extends Request
      */
     public function prepareForValidation()
     {
-        if (!Cart::allItemsAreVirtual() && !$this->input('shipping_method')) {
-            throw new CheckoutException(trans('checkout::messages.no_shipping_method'));
-        }
+        // if (!Cart::allItemsAreVirtual() && !$this->input('shipping_method')) {
+        //     throw new CheckoutException(trans('checkout::messages.no_shipping_method'));
+        // }
     }
 
 
@@ -50,7 +50,7 @@ class StoreOrderRequest extends Request
                 'ship_to_a_different_address' => 'boolean',
                 'payment_method' => ['required', Rule::in(Gateway::names())],
                 'terms_and_conditions' => 'accepted',
-                'shipping_method' => Cart::allItemsAreVirtual() ? 'nullable' : 'required',
+               'shipping_method' => 'nullable',
             ],
             $this->billingAddressRules(),
             $this->shippingAddressRules()

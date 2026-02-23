@@ -107,8 +107,8 @@
 
         <form @submit.prevent="submitQuote">
 
-            <input type="hidden" x-model="$store.quote.product?.name">
-            <input type="hidden" x-model="$store.quote.product?.url">
+            {{-- <input type="hidden" x-model="$store.quote.product?.name">
+            <input type="hidden" x-model="$store.quote.product?.url"> --}}
 
             <div class="form-group">
                 <label>Name</label>
