@@ -198,6 +198,23 @@ class UpdateSettingRequest extends Request
         ];
     }
 
+    protected function prepareForValidation()
+{
+    if (
+        $this->check_payment_enabled &&
+        empty(array_get($this->translatable, 'check_payment_instructions'))
+    ) {
+        $this->merge([
+            'translatable' => array_merge(
+                $this->translatable ?? [],
+                [
+                    'check_payment_instructions' =>
+                        'Please send payment via Check / Money Order.'
+                ]
+            )
+        ]);
+    }
+}
 
     /**
      * Get data to be validated from the request.

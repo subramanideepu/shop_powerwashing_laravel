@@ -5,7 +5,8 @@
         {{ Form::textarea('translatable[check_payment_description]', trans('setting::attributes.translatable.check_payment_description'), $errors, $settings, ['rows' => 3, 'required' => true]) }}
 
         <div class="{{ old('check_payment_enabled', array_get($settings, 'check_payment_enabled')) ? '' : 'hide' }}" id="check-payment-fields">
-            {{ Form::textarea('translatable[check_payment_instructions]', trans('setting::attributes.translatable.check_payment_instructions'), $errors, $settings, ['rows' => 3, 'required' => true]) }}
+            {{-- {{ Form::textarea('translatable[check_payment_instructions]', trans('setting::attributes.translatable.check_payment_instructions'), $errors, $settings, ['rows' => 3, 'required' => true]) }} --}}
+        @php $settings['translatable.check_payment_instructions'] = array_get($settings, 'translatable.check_payment_instructions') ?: 'Please send payment via Check / Money Order.'; @endphp {{ Form::textarea('translatable[check_payment_instructions]', trans('setting::attributes.translatable.check_payment_instructions'), $errors, $settings, ['rows' => 3, 'required' => true] ) }}
         </div>
     </div>
 </div>

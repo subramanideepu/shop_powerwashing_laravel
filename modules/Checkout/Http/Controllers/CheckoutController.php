@@ -61,6 +61,31 @@ class CheckoutController extends Controller
      */
     public function store(StoreOrderRequest $request, CustomerService $customerService, OrderService $orderService)
     {
+        $blockedStates = ['california', 'ca'];
+        $states = [
+        strtolower(trim($request->billing['state'] ?? '')),
+        strtolower(trim($request->shipping['state'] ?? '')),
+       ];
+         $zips = [
+        (int) ($request->billing['zip'] ?? 0),
+        (int) ($request->shipping['zip'] ?? 0),
+        ];    
+    foreach ($states as $state) {
+        if (in_array($state, $blockedStates)) {
+            return response()->json([
+                'message' => 'Sorry, we do not accept orders from California.',
+            ], 422);
+        }
+    }    
+    foreach ($zips as $zip) {
+        if ($zip >= 90000 && $zip <= 96162) {
+            return response()->json([
+                'message' => 'Sorry, we do not accept orders from California.',
+            ], 422);
+        }
+    }
+
+    
         if (auth()->guest() && $request->create_an_account) {
             $customerService->register($request)->login();
         }
